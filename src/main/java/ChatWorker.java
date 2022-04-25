@@ -3,6 +3,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 @Slf4j
 @ToString
@@ -12,8 +15,11 @@ class ChatWorker implements Runnable {
 
     private final Socket socket;
     private final ChatWorkers chatWorkers;
+    private ChannelClient channelClient;
     private MessageWriter writer;
+    private String chatName;
 
+    Scanner in = new Scanner(System.in);
     public ChatWorker(Socket socket, ChatWorkers chatWorkers) {
         this.socket = socket;
         this.chatWorkers = chatWorkers;
@@ -29,7 +35,9 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
-            new ChannelClient().start();
+            System.out.println("podaj nazwę pokoju:");
+            chatName = in.nextLine();
+            privateChat(chatName);
         } else {
             chatWorkers.broadcast(text);
         }
@@ -45,6 +53,13 @@ class ChatWorker implements Runnable {
         } catch (IOException e) {
             log.error("Closing socked failed: " + e.getMessage());
         }
+    }
+
+    private void privateChat(String name) {
+        channelClient = new ChannelClient(name);
+        channelClient.start();
+        log.info("new private chat " + name + " open");
+
     }
 }
 

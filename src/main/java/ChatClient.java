@@ -3,6 +3,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -15,6 +17,8 @@ class ChatClient {
     private static final int PORT = 8080;
     private static final String HOST = "localhost";
     private static String name;
+    private static String chatName;
+    private Map<String, String> privateChatMap = new HashMap<>();
 
     public ChatClient(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
@@ -44,6 +48,7 @@ class ChatClient {
                 "\nNowy pokój \"\\r\"" +
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
+
 //        MessageReader.showArchive().forEach(System.out::println);
 
     }

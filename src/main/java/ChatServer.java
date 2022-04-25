@@ -35,10 +35,6 @@ class ChatServer {
             log.info("new " + chatWorker.getClass().getName());
             chatWorkers.add(chatWorker);
             executorService.execute(chatWorker);
-//            if (bool == true) {
-//                new ChannelClient().start();
-//                bool = false;
-//            }
         }
     }
 }

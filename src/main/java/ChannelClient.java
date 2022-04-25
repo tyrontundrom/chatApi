@@ -9,6 +9,11 @@ class ChannelClient {
     private SocketChannel channel;
     private static final String HOST = "localhost";
     private static final int PORT = 8080;
+    private String name;
+
+    public ChannelClient(String name) {
+        this.name = name;
+    }
 
     void start() {
         channel = createSocketChannel();
