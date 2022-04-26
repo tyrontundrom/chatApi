@@ -17,7 +17,7 @@ class MessageReader {
     private BufferedReader reader;
     private Runnable onClose;
     private List<String> archiveChat = new ArrayList<>();
-//    private static ArchiveChat archive = new ArchiveChat();
+    private static ArchiveChat archive = new ArchiveChat();
 
     public MessageReader(InputStream inputStream, Consumer<String> onText) {
         this.onText = onText;
@@ -41,7 +41,7 @@ class MessageReader {
             while ((text = reader.readLine()) != null) {
                 onText.accept(text);
                 archiveChat.add(text);
-//                this.archive.add(text);
+                this.archive.add(text);
             }
         } catch (IOException e) {
             log.warn("Read message failed: " + e.getMessage());
@@ -54,8 +54,8 @@ class MessageReader {
         }
     }
 
-//    static List<String> showArchive() {
-//       return archive.getArchive();
-//    }
+    static List<String> showArchive() {
+       return archive.getArchive();
+    }
 
 }

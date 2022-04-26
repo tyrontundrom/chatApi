@@ -49,7 +49,7 @@ class ChatClient {
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
 
-//        MessageReader.showArchive().forEach(System.out::println);
+        MessageReader.showArchive().forEach(System.out::println);
 
     }
 }

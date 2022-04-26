@@ -3,8 +3,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 @Slf4j
@@ -12,12 +10,15 @@ import java.util.Scanner;
 class ChatWorker implements Runnable {
     private static final String END_SESSION_COMMAND = "\\q";
     private static final String NEW_CHANNEL_COMMAND = "\\r";
+    private static final String SEND_MESSAGE_COMMAND = "\\p";
+    private static final String SAVE_MESSAGE_COMMAND = "\\s";
 
     private final Socket socket;
     private final ChatWorkers chatWorkers;
     private ChannelClient channelClient;
     private MessageWriter writer;
     private String chatName;
+    private FileService fileService;
 
     Scanner in = new Scanner(System.in);
     public ChatWorker(Socket socket, ChatWorkers chatWorkers) {
@@ -38,6 +39,10 @@ class ChatWorker implements Runnable {
             System.out.println("podaj nazwę pokoju:");
             chatName = in.nextLine();
             privateChat(chatName);
+        } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
+            send(text);
+        } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
+            save(text);
         } else {
             chatWorkers.broadcast(text);
         }
@@ -45,6 +50,14 @@ class ChatWorker implements Runnable {
 
     public void send(String text) {
         writer.write(text);
+        fileName();
+        fileService.sendFile(socket);
+    }
+
+    public void save(String text) {
+        writer.write(text);
+
+        fileService.saveFile();
     }
 
     private void closeSocket() {
@@ -60,6 +73,12 @@ class ChatWorker implements Runnable {
         channelClient.start();
         log.info("new private chat " + name + " open");
 
+    }
+
+    private void fileName() {
+        System.out.println("nazwa pliku");
+        String fileName = in.nextLine();
+        fileService = new FileService(fileName);
     }
 }
 

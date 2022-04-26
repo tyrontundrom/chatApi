@@ -11,7 +11,6 @@ class ChatServer {
     private final ChatWorkers chatWorkers = factory.createChatWorkers();
     private final ExecutorService executorService = factory.createExecutorService();
     private static final int PORT = 8080;
-    private boolean bool = true;
 
     public static void main(String[] args) {
         new ChatServer().start(PORT);

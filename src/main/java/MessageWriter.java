@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Slf4j
 @ToString
@@ -23,4 +21,6 @@ class MessageWriter {
     public void write(String text) {
         writer.println(text);
     }
+
+
 }
