@@ -17,8 +17,8 @@ class ChatClient {
     private static final int PORT = 8080;
     private static final String HOST = "localhost";
     private static String name;
-    private static String chatName;
-    private Map<String, String> privateChatMap = new HashMap<>();
+    private User user;
+
 
     public ChatClient(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
@@ -26,6 +26,7 @@ class ChatClient {
         readFromSocket = () -> new MessageReader(socket, System.out::println, () -> {
         }).read();
         readFromConsole = () -> new MessageReader(System.in, onText).read();
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -40,6 +41,7 @@ class ChatClient {
         Thread consoleMessageReader = new Thread(readFromConsole);
         consoleMessageReader.setDaemon(true);
         consoleMessageReader.start();
+
     }
 
     private void menu() {
@@ -48,8 +50,10 @@ class ChatClient {
                 "\nNowy pokój \"\\r\"" +
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
-
+        user = new User(name);
         MessageReader.showArchive().forEach(System.out::println);
-
     }
+
+
+
 }

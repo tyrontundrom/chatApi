@@ -3,6 +3,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 @Slf4j
@@ -15,10 +17,9 @@ class ChatWorker implements Runnable {
 
     private final Socket socket;
     private final ChatWorkers chatWorkers;
-    private ChannelClient channelClient;
     private MessageWriter writer;
-    private String chatName;
     private FileService fileService;
+
 
     Scanner in = new Scanner(System.in);
     public ChatWorker(Socket socket, ChatWorkers chatWorkers) {
@@ -36,7 +37,7 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
-            privateChat(chatName);
+            privateChat(text);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
             sendFile(text);
         } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
@@ -69,11 +70,8 @@ class ChatWorker implements Runnable {
         }
     }
 
-    private void privateChat(String name) {
-        channelClient = new ChannelClient(name);
-        channelClient.start();
-        log.info("new private chat " + name + " open");
-
+    private void privateChat(String text) {
+        User user = ChatClient.getUser();
     }
 
     private void fileName() {
