@@ -36,13 +36,11 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
-            System.out.println("podaj nazwę pokoju:");
-            chatName = in.nextLine();
             privateChat(chatName);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
-            send(text);
+            sendFile(text);
         } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
-            save(text);
+            saveFile(text);
         } else {
             chatWorkers.broadcast(text);
         }
@@ -50,11 +48,14 @@ class ChatWorker implements Runnable {
 
     public void send(String text) {
         writer.write(text);
+    }
+
+    public void sendFile(String text) {
         fileName();
         fileService.sendFile(socket);
     }
 
-    public void save(String text) {
+    public void saveFile(String text) {
         writer.write(text);
 
         fileService.saveFile();
