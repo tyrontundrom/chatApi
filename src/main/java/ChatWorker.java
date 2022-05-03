@@ -1,3 +1,4 @@
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +10,7 @@ import java.util.Scanner;
 
 @Slf4j
 @ToString
+@Getter
 class ChatWorker implements Runnable {
     private static final String END_SESSION_COMMAND = "\\q";
     private static final String NEW_CHANNEL_COMMAND = "\\r";
@@ -19,7 +21,7 @@ class ChatWorker implements Runnable {
     private final ChatWorkers chatWorkers;
     private MessageWriter writer;
     private FileService fileService;
-
+    private String chatName;
 
     Scanner in = new Scanner(System.in);
     public ChatWorker(Socket socket, ChatWorkers chatWorkers) {
@@ -37,7 +39,7 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
-            privateChat(text);
+            chatWorkers.broadcastChannel(text, chatName);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
             sendFile(text);
         } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
@@ -71,7 +73,6 @@ class ChatWorker implements Runnable {
     }
 
     private void privateChat(String text) {
-        User user = ChatClient.getUser();
     }
 
     private void fileName() {
@@ -79,5 +80,6 @@ class ChatWorker implements Runnable {
         String fileName = in.nextLine();
         fileService = new FileService(fileName);
     }
+
 }
 

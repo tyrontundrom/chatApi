@@ -34,6 +34,7 @@ class ChatServer {
             log.info("new " + chatWorker.getClass().getName());
             chatWorkers.add(chatWorker);
             executorService.execute(chatWorker);
+
         }
     }
 }

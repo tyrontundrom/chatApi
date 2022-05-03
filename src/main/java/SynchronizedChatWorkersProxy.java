@@ -30,4 +30,11 @@ class SynchronizedChatWorkersProxy implements ChatWorkers {
         chatWorkers.broadcast(text);
         lock.readLock().unlock();
     }
+
+    @Override
+    public void broadcastChannel(String text, String chatName) {
+        lock.readLock().lock();
+        chatWorkers.broadcastChannel(text, chatName);
+        lock.readLock().unlock();
+    }
 }

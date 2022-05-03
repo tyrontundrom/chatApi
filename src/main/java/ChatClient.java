@@ -19,14 +19,12 @@ class ChatClient {
     private static String name;
     private User user;
 
-
     public ChatClient(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
         onText = text -> new MessageWriter(socket).write(this.name + ": " + text);
         readFromSocket = () -> new MessageReader(socket, System.out::println, () -> {
         }).read();
         readFromConsole = () -> new MessageReader(System.in, onText).read();
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -41,7 +39,6 @@ class ChatClient {
         Thread consoleMessageReader = new Thread(readFromConsole);
         consoleMessageReader.setDaemon(true);
         consoleMessageReader.start();
-
     }
 
     private void menu() {
