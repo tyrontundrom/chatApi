@@ -39,6 +39,7 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
+            chatName = in.nextLine();
             chatWorkers.broadcastChannel(text, chatName);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
             sendFile(text);

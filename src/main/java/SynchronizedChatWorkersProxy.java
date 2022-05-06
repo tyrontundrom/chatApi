@@ -35,6 +35,7 @@ class SynchronizedChatWorkersProxy implements ChatWorkers {
     public void broadcastChannel(String text, String chatName) {
         lock.readLock().lock();
         chatWorkers.broadcastChannel(text, chatName);
+        System.out.println("text: " + text + " chatName: " + chatName);
         lock.readLock().unlock();
     }
 }

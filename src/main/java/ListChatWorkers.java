@@ -24,6 +24,6 @@ class ListChatWorkers  implements ChatWorkers {
 
     @Override
     public void broadcastChannel(String text, String chatName) {
-        chatWorkers.stream().filter(chatWorker -> chatWorker.equals(chatName)).forEach(System.out::println);
+        chatWorkers.stream().filter(chatWorker -> chatWorker.equals(chatName)).forEach(chatWorker -> chatWorker.send(text));
     }
 }
