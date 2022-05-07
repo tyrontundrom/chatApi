@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 @Slf4j
@@ -13,7 +11,7 @@ import java.util.Scanner;
 @Getter
 class ChatWorker implements Runnable {
     private static final String END_SESSION_COMMAND = "\\q";
-    private static final String NEW_CHANNEL_COMMAND = "\\r";
+    private static final String NEW_CHANNEL_COMMAND = "@";
     private static final String SEND_MESSAGE_COMMAND = "\\p";
     private static final String SAVE_MESSAGE_COMMAND = "\\s";
 
@@ -21,13 +19,17 @@ class ChatWorker implements Runnable {
     private final ChatWorkers chatWorkers;
     private MessageWriter writer;
     private FileService fileService;
-    private String chatName;
+    private User user;
+    private String userName;
+    private PrivateChat privateChat;
+    private UsersListInterface listInterface;
 
     Scanner in = new Scanner(System.in);
-    public ChatWorker(Socket socket, ChatWorkers chatWorkers) {
+    public ChatWorker(Socket socket, ChatWorkers chatWorkers,UsersListInterface listInterface) {
         this.socket = socket;
         this.chatWorkers = chatWorkers;
         writer = new MessageWriter(socket);
+        this.listInterface = listInterface;
     }
 
     @Override
@@ -36,11 +38,16 @@ class ChatWorker implements Runnable {
     }
 
     private void onText(String text) {
+        String[] split = text.split(" ");
+        String usernameToSend = split[1].substring(1);
+        userName = split[0].substring(0,split[0].length()-1);
+        listInterface.addUser(userName,socket);
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
-        } else if (text.endsWith(NEW_CHANNEL_COMMAND)) {
-            chatName = in.nextLine();
-            chatWorkers.broadcastChannel(text, chatName);
+        } else if (text.contains(NEW_CHANNEL_COMMAND)) {
+
+//            chatWorkers.broadcastChannel(text, chatName);
+            new MessageWriter(listInterface.getSocket(usernameToSend)).write(split[2]);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
             sendFile(text);
         } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
@@ -73,7 +80,8 @@ class ChatWorker implements Runnable {
         }
     }
 
-    private void privateChat(String text) {
+    public void privateChat() {
+
     }
 
     private void fileName() {

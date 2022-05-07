@@ -1,5 +1,6 @@
 import lombok.Getter;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,13 @@ class ListChatWorkers  implements ChatWorkers {
 
     @Override
     public void broadcastChannel(String text, String chatName) {
-        chatWorkers.stream().filter(chatWorker -> chatWorker.equals(chatName)).forEach(chatWorker -> chatWorker.send(text));
+        chatWorkers.stream().filter(chatWorker -> chatWorker.equals(chatName));
+        System.out.println("broAdcastChannel");
+    }
+
+    @Override
+    public Socket getSocket() {
+        System.out.println(chatWorkers.get(0).getSocket());
+        return chatWorkers.get(0).getSocket();
     }
 }

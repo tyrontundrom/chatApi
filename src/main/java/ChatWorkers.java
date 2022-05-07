@@ -1,3 +1,5 @@
+import java.net.Socket;
+
 public interface ChatWorkers {
 
     void add(ChatWorker chatWorker);
@@ -7,4 +9,6 @@ public interface ChatWorkers {
     void broadcast(String text);
 
     void broadcastChannel(String text, String chatName);
+
+    Socket getSocket();
 }

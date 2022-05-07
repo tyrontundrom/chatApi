@@ -18,13 +18,16 @@ class ChatClient {
     private static final String HOST = "localhost";
     private static String name;
     private User user;
+    private static Socket socket;
+    private UsersListInterface usersListInterface = new UsersList();
 
     public ChatClient(String host, int port) throws IOException {
-        Socket socket = new Socket(host, port);
+        socket = new Socket(host, port);
         onText = text -> new MessageWriter(socket).write(this.name + ": " + text);
         readFromSocket = () -> new MessageReader(socket, System.out::println, () -> {
         }).read();
         readFromConsole = () -> new MessageReader(System.in, onText).read();
+        System.out.println(socket);
     }
 
     public static void main(String[] args) throws IOException {
@@ -39,17 +42,34 @@ class ChatClient {
         Thread consoleMessageReader = new Thread(readFromConsole);
         consoleMessageReader.setDaemon(true);
         consoleMessageReader.start();
+
     }
 
     private void menu() {
         Scanner in = new Scanner(System.in);
         System.out.print("Wyjście z czatu \"\\q\"" +
-                "\nNowy pokój \"\\r\"" +
+                "\nPrywatna wiadomość \"@\"nazwa użytkownika wiadomość" +
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
-        user = new User(name);
+        user = new User(name,socket);
+        usersListInterface.addUser(name,socket);
+//        user.addUser();
+        System.out.println("userlist " + usersListInterface.getSocket(name));
+        System.out.println("clientUser: " + user.getSocket("ww"));
         MessageReader.showArchive().forEach(System.out::println);
     }
+
+    public static String getUsername() {
+        return name;
+    }
+
+    public static Socket getUserSocket() {
+        return socket;
+    }
+
+//    public static UsersListInterface getList() {
+//        return usersListInterface;
+//    }
 
 
 

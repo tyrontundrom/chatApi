@@ -1,3 +1,4 @@
+import java.net.Socket;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -37,5 +38,11 @@ class SynchronizedChatWorkersProxy implements ChatWorkers {
         chatWorkers.broadcastChannel(text, chatName);
         System.out.println("text: " + text + " chatName: " + chatName);
         lock.readLock().unlock();
+    }
+
+    @Override
+    public Socket getSocket() {
+        lock.readLock().lock();
+        return chatWorkers.getSocket();
     }
 }
