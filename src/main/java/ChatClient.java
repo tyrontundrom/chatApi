@@ -49,6 +49,8 @@ class ChatClient {
         Scanner in = new Scanner(System.in);
         System.out.print("Wyjście z czatu \"\\q\"" +
                 "\nPrywatna wiadomość \"@\"nazwa użytkownika wiadomość" +
+                "\nWysyłanie pliku \"#send\" nazwa pliku" +
+                "\nOdbieranie pliku \"#save\"" +
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
         user = new User(name,socket);

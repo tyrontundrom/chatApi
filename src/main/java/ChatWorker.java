@@ -13,8 +13,8 @@ import java.util.Scanner;
 class ChatWorker implements Runnable {
     private static final String END_SESSION_COMMAND = "\\q";
     private static final String NEW_CHANNEL_COMMAND = "@";
-    private static final String SEND_MESSAGE_COMMAND = "\\p";
-    private static final String SAVE_MESSAGE_COMMAND = "\\s";
+    private static final String SEND_MESSAGE_COMMAND = "#send";
+    private static final String SAVE_MESSAGE_COMMAND = "#save";
 
     private final Socket socket;
     private final ChatWorkers chatWorkers;
@@ -46,12 +46,13 @@ class ChatWorker implements Runnable {
         if (text.endsWith(END_SESSION_COMMAND)) {
             closeSocket();
         } else if (text.contains(NEW_CHANNEL_COMMAND)) {
-
-//            chatWorkers.broadcastChannel(text, chatName);
-            new MessageWriter(listInterface.getSocket(usernameToSend)).write(split[2]);
-        } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
-            sendFile();
-        } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
+            new MessageWriter(listInterface.getSocket(usernameToSend)).write("priv->" + split[0] + " " + split[2]);
+        } else if (text.contains(SEND_MESSAGE_COMMAND)) {
+            File file = new File(split[2]);
+            fileService = new FileService(file);
+            fileService.sendFile(socket);
+//            sendFile();
+        } else if (text.contains(SAVE_MESSAGE_COMMAND)) {
             saveFile();
         } else {
             chatWorkers.broadcast(text);
@@ -63,8 +64,8 @@ class ChatWorker implements Runnable {
     }
 
     public void sendFile() {
-        String fiepath = fileName();
-        File file = new File(fiepath);
+        String filepath = fileName();
+        File file = new File(filepath);
         fileService = new FileService(file);
         fileService.sendFile(socket);
     }

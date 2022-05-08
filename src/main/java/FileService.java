@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Set;
 
 @Getter
 class FileService {
@@ -25,9 +26,10 @@ class FileService {
 
     public void saveFile() {
         try {
-            file = new File(System.getProperty("user.home") + File.separator + "file_from_chat");
+            String path = System.getProperty("user.home") + File.separator + "file_from_chat";
+            file = new File(path);
             file.mkdir();
-            String path = file + "/" + fileName + ".txt";
+//            String path = file + File.separator + fileName;
             Files.writeString(Paths.get(path), "temp", StandardOpenOption.CREATE);
         } catch (IOException exception) {
             exception.printStackTrace();
