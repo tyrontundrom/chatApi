@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ToString
@@ -15,6 +18,7 @@ class ChatWorker implements Runnable {
     private static final String NEW_CHANNEL_COMMAND = "@";
     private static final String SEND_MESSAGE_COMMAND = "#send";
     private static final String SAVE_MESSAGE_COMMAND = "#save";
+    private static final String SHOW_HISTORY_COMMAND = "#show";
 
     private final Socket socket;
     private final ChatWorkers chatWorkers;
@@ -24,6 +28,7 @@ class ChatWorker implements Runnable {
     private String userName;
     private PrivateChat privateChat;
     private UsersListInterface listInterface;
+    private List<String> history = new ArrayList<>();
 
     Scanner in = new Scanner(System.in);
     public ChatWorker(Socket socket, ChatWorkers chatWorkers,UsersListInterface listInterface) {
@@ -54,6 +59,8 @@ class ChatWorker implements Runnable {
 //            sendFile();
         } else if (text.contains(SAVE_MESSAGE_COMMAND)) {
             saveFile();
+        }else if (text.contains(SHOW_HISTORY_COMMAND)) {
+            new MessageWriter(socket).write("history: {\n" + history.stream().collect(Collectors.joining("\t\n")) + " }\n####");
         } else {
             chatWorkers.broadcast(text);
         }
@@ -61,6 +68,7 @@ class ChatWorker implements Runnable {
 
     public void send(String text) {
         writer.write(text);
+        history.add(text);
     }
 
     public void sendFile() {
