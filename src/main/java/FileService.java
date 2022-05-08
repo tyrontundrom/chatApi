@@ -1,9 +1,12 @@
+import lombok.Getter;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+@Getter
 class FileService {
 
     private String fileName;
@@ -13,8 +16,9 @@ class FileService {
     private int fileSize;
     private byte[] filebyte;
 
-    public FileService(String fileName) {
-        this.fileName = fileName;
+    public FileService(File file) {
+        this.file = file;
+//        this.fileName = fileName;
         this.fileSize = (int) file.length();
         this.filebyte = new byte[fileSize];
     }
@@ -32,7 +36,7 @@ class FileService {
 
     public void sendFile(Socket socket) {
         try {
-            file = new File ("");
+//            file = new File ("file.txt");
             fileInputStream = new FileInputStream(file);
             bufferedInputStream = new BufferedInputStream(fileInputStream);
             bufferedInputStream.read(filebyte,0,filebyte.length);

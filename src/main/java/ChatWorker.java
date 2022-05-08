@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -49,9 +50,9 @@ class ChatWorker implements Runnable {
 //            chatWorkers.broadcastChannel(text, chatName);
             new MessageWriter(listInterface.getSocket(usernameToSend)).write(split[2]);
         } else if (text.endsWith(SEND_MESSAGE_COMMAND)) {
-            sendFile(text);
+            sendFile();
         } else if (text.endsWith(SAVE_MESSAGE_COMMAND)) {
-            saveFile(text);
+            saveFile();
         } else {
             chatWorkers.broadcast(text);
         }
@@ -61,13 +62,15 @@ class ChatWorker implements Runnable {
         writer.write(text);
     }
 
-    public void sendFile(String text) {
-        fileName();
+    public void sendFile() {
+        String fiepath = fileName();
+        File file = new File(fiepath);
+        fileService = new FileService(file);
         fileService.sendFile(socket);
     }
 
-    public void saveFile(String text) {
-        writer.write(text);
+    public void saveFile() {
+        fileName();
 
         fileService.saveFile();
     }
@@ -84,10 +87,10 @@ class ChatWorker implements Runnable {
 
     }
 
-    private void fileName() {
+    private String fileName() {
         System.out.println("nazwa pliku");
         String fileName = in.nextLine();
-        fileService = new FileService(fileName);
+        return fileName;
     }
 
 }
