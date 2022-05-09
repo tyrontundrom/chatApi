@@ -46,7 +46,7 @@ class FileService {
             System.out.println("Sending...");
             outputStream.write(filebyte,0,filebyte.length);
             outputStream.flush();
-            socket.close();
+//            socket.close();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
