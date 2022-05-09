@@ -1,3 +1,4 @@
+import java.io.File;
 import java.net.Socket;
 
 public interface ChatWorkers {
@@ -11,4 +12,6 @@ public interface ChatWorkers {
     void broadcastChannel(String text, String chatName);
 
     Socket getSocket();
+
+    void sendFileWorker(File file,Socket socket);
 }

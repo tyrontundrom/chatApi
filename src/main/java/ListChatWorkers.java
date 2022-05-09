@@ -1,5 +1,6 @@
 import lombok.Getter;
 
+import java.io.File;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +34,10 @@ class ListChatWorkers  implements ChatWorkers {
     public Socket getSocket() {
         System.out.println(chatWorkers.get(0).getSocket());
         return chatWorkers.get(0).getSocket();
+    }
+
+    @Override
+    public void sendFileWorker(File file, Socket socket) {
+        chatWorkers.forEach(chatWorker -> chatWorker.sendFile(file, socket));
     }
 }

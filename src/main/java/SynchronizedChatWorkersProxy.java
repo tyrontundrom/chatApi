@@ -1,3 +1,4 @@
+import java.io.File;
 import java.net.Socket;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -44,5 +45,12 @@ class SynchronizedChatWorkersProxy implements ChatWorkers {
     public Socket getSocket() {
         lock.readLock().lock();
         return chatWorkers.getSocket();
+    }
+
+    @Override
+    public void sendFileWorker(File file, Socket socket) {
+        lock.readLock().lock();
+        chatWorkers.sendFileWorker(file,socket);
+        lock.readLock().unlock();
     }
 }

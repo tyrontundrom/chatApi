@@ -17,6 +17,10 @@ class FileService {
     private int fileSize;
     private byte[] filebyte;
 
+
+    public FileService() {
+    }
+
     public FileService(File file) {
         this.file = file;
 //        this.fileName = fileName;
@@ -24,13 +28,13 @@ class FileService {
         this.filebyte = new byte[fileSize];
     }
 
-    public void saveFile() {
+    public void saveFile(String path) {
         try {
-            String path = System.getProperty("user.home") + File.separator + "file_from_chat";
-            file = new File(path);
+            String savePath = System.getProperty("user.home") + File.separator + "file_from_chat";
+            File file = new File(path);
             file.mkdir();
 //            String path = file + File.separator + fileName;
-            Files.writeString(Paths.get(path), "temp", StandardOpenOption.CREATE);
+            Files.writeString(Paths.get(savePath), "temp", StandardOpenOption.CREATE);
         } catch (IOException exception) {
             exception.printStackTrace();
         }

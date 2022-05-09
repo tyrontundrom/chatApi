@@ -54,11 +54,13 @@ class ChatWorker implements Runnable {
             new MessageWriter(listInterface.getSocket(usernameToSend)).write("priv->" + split[0] + " " + split[2]);
         } else if (text.contains(SEND_MESSAGE_COMMAND)) {
             File file = new File(split[2]);
-            fileService = new FileService(file);
-            fileService.sendFile(socket);
+//            fileService = new FileService(file);
+//            fileService.sendFile(socket);
 //            sendFile();
+            chatWorkers.sendFileWorker(file, socket);
+            chatWorkers.broadcast(split[0] + " has send file: " + file.getPath());
         } else if (text.contains(SAVE_MESSAGE_COMMAND)) {
-            saveFile();
+            saveFile(split[2]);
         }else if (text.contains(SHOW_HISTORY_COMMAND)) {
             new MessageWriter(socket).write("history: {\n" + history.stream().collect(Collectors.joining("\t\n")) + " }\n####");
         } else {
@@ -71,17 +73,17 @@ class ChatWorker implements Runnable {
         history.add(text);
     }
 
-    public void sendFile() {
-        String filepath = fileName();
-        File file = new File(filepath);
+    public void sendFile(File file, Socket socket) {
+//        String filepath = fileName();
+//        File file = new File(filepath);
         fileService = new FileService(file);
         fileService.sendFile(socket);
     }
 
-    public void saveFile() {
-        fileName();
-
-        fileService.saveFile();
+    public void saveFile(String text) {
+//        fileName();
+        fileService = new FileService();
+        fileService.saveFile(text);
     }
 
     private void closeSocket() {
