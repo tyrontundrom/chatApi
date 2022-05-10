@@ -14,6 +14,7 @@ class FileService {
     private File file;
     private FileInputStream fileInputStream;
     private BufferedInputStream bufferedInputStream;
+    private DataInputStream dataInputStream;
     private int fileSize;
     private byte[] filebyte;
 
@@ -28,9 +29,9 @@ class FileService {
         this.filebyte = new byte[fileSize];
     }
 
-    public void saveFile(String path) {
+    private void saveFile(String path) {
         try {
-            String savePath = System.getProperty("user.home") + File.separator + "file_from_chat";
+            String savePath = System.getProperty("user.home") + File.separator + path;
             File file = new File(path);
             file.mkdir();
 //            String path = file + File.separator + fileName;
@@ -38,6 +39,20 @@ class FileService {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public void receiveFile(String fileName, Socket socket) throws Exception{
+        int bytes = 0;
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        dataInputStream = new DataInputStream(socket.getInputStream());
+        long size = dataInputStream.readLong();
+        byte[] buffer = new byte[4*1024];
+        while (size > 0 && (bytes = dataInputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+            fileOutputStream.write(buffer,0,bytes);
+            size -= bytes;
+        }
+
+        fileOutputStream.close();
     }
 
     public void sendFile(Socket socket) {

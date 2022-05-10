@@ -51,6 +51,7 @@ class ChatClient {
                 "\nPrywatna wiadomość \"@\"nazwa użytkownika wiadomość" +
                 "\nWysyłanie pliku \"#send\" nazwa pliku" +
                 "\nOdbieranie pliku \"#save\"" +
+                "\nHistoria \"#show\"" +
                 "\nPodaj swoją nazwę:");
         name = in.nextLine();
         user = new User(name,socket);

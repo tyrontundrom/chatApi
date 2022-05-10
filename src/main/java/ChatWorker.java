@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -59,9 +60,19 @@ class ChatWorker implements Runnable {
 //            sendFile();
             chatWorkers.sendFileWorker(file, socket);
             chatWorkers.broadcast(split[0] + " has send file: " + file.getPath());
+            System.out.println(file.length());
+            System.out.println(file.exists());
+            System.out.println(file.getName());
         } else if (text.contains(SAVE_MESSAGE_COMMAND)) {
-            saveFile(split[2]);
-        }else if (text.contains(SHOW_HISTORY_COMMAND)) {
+//            saveFile(split[2]);
+            fileService = new FileService();
+            try {
+                fileService.receiveFile(split[2],socket );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("Save method end");
+        } else if (text.contains(SHOW_HISTORY_COMMAND)) {
             new MessageWriter(socket).write("history: {\n" + history.stream().collect(Collectors.joining("\t\n")) + " }\n####");
         } else {
             chatWorkers.broadcast(text);
@@ -83,7 +94,7 @@ class ChatWorker implements Runnable {
     public void saveFile(String text) {
 //        fileName();
         fileService = new FileService();
-        fileService.saveFile(text);
+//        fileService.saveFile(text);
     }
 
     private void closeSocket() {

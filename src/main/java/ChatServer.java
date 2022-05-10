@@ -37,6 +37,7 @@ class ChatServer {
             Socket socket = serverSocket.accept();
             log.info("New connection established...");
             ChatWorker chatWorker = new ChatWorker(socket, chatWorkers, usersListInterface);
+            System.out.println("socket from server" + socket);
             localporsts.add(socket.getPort());
             log.info("new " + chatWorker.getClass().getName());
             chatWorkers.add(chatWorker);
